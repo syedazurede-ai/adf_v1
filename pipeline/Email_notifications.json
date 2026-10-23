@@ -1,0 +1,133 @@
+{
+	"name": "Email_notifications",
+	"properties": {
+		"activities": [
+			{
+				"name": "Email_notify",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "set_email_body",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"url": "https://prod-02.centralindia.logic.azure.com:443/workflows/a8cea147b61b493d95835b417ab77b40/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=9ooaiqfedQfmlrEQ_M5DY1szyNtZXrgr8HKNtgqnOPo",
+					"body": {
+						"value": "@variables('email_body')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "set_email_body",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Subject",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "prepare_body",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "email_body",
+					"value": {
+						"value": "{\n    \"email_reciepent\":\"@{pipeline().parameters.email_receipent}\",\n    \"subject\" : \"@{variables('Subject')}\",\n    \"Body\" : \"@{variables('prepare_body')}\"\n}",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Subject",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Subject",
+					"value": {
+						"value": "table name @{pipeline().parameters.table_name} - @{pipeline().parameters.status}",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "prepare_body",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "prepare_body",
+					"value": {
+						"value": "The table @{pipeline().parameters.table_name} ingestion has successfully comepleted and the staus is - @{pipeline().parameters.status}",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"table_name": {
+				"type": "string"
+			},
+			"status": {
+				"type": "string"
+			},
+			"email_receipent": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"email_body": {
+				"type": "String"
+			},
+			"Status": {
+				"type": "String"
+			},
+			"body": {
+				"type": "String"
+			},
+			"Subject": {
+				"type": "String"
+			},
+			"prepare_body": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-10-23T13:27:02Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

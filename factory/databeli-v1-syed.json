@@ -1,0 +1,21 @@
+{
+	"name": "databeli-v1-syed",
+	"properties": {
+		"globalParameters": {
+			"email_reciepent": {
+				"type": "string",
+				"value": "syedazure.de@gmail.com"
+			}
+		},
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "c7fcc449-2c8e-440d-9258-a320e9873c4b",
+		"tenantId": "b1aa50fa-08f2-4866-8cda-7688bfd56670"
+	}
+}
