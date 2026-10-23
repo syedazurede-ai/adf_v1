@@ -411,6 +411,7 @@
 					},
 					{
 						"name": "Check count",
+						"description": "Checking the count ",
 						"type": "Lookup",
 						"dependsOn": [
 							{
